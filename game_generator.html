@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Concept Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 1200px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .generate-btn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        .results-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .result-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(52, 152, 219, 0.4);
+        }
+
+        .result-card h3 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #ecf0f1;
+        }
+
+        .result-card p {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: white;
+        }
+
+        .footer {
+            margin-top: 30px;
+            color: #666;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .results-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Game Concept Generator</h1>
+        <button class="generate-btn" onclick="generateConcept()">Create Set</button>
+        
+        <div class="results-container" id="results">
+            <!-- Results will be populated here -->
+        </div>
+        
+        <div class="footer">
+            <p>Click "Create Set" to generate a random game concept with 5 different aspects!</p>
+        </div>
+    </div>
+
+    <script>
+        const gameData = {
+            genre: [
+                "Action Adventure",
+                "Arcade",
+                "Arena Shooter",
+                "City Builder",
+                "RTS",
+                "Shoot 'Em Up",
+                "Space Sim",
+                "Tower Defense",
+                "TurnBased Strategy",
+                "Visual Novel"
+            ],
+            theme: [
+                "1980s",
+                "Aliens",
+                "Alternate History",
+                "Cats",
+                "Cyberpunk",
+                "Detective",
+                "Dystopian",
+                "Fantasy",
+                "Funny",
+                "Magic",
+                "Medieval",
+                "Military",
+                "Mythology",
+                "Nature",
+                "Robots",
+                "Space",
+                "Surreal",
+                "Tactical"
+            ],
+            visual: [
+                "2.5D",
+                "Clay",
+                "Comic Book",
+                "First-Person",
+                "Isometric",
+                "Minimalist",
+                "Pixel Graphics",
+                "Realistic",
+                "Stylized",
+                "Voxel",
+                "VR"
+            ],
+            feature: [
+                "Class-Based",
+                "Crafting",
+                "Deckbuilding",
+                "Gun Customization",
+                "Hack and Slash",
+                "Physics",
+                "Procedural Generation",
+                "PvP",
+                "Stealth",
+                "Tabletop",
+                "Team-Based",
+                "Time Manipulation",
+                "Vehicular Combat"
+            ],
+            setting: [
+                "Aztec Gardens, 1450 CE - Mexico",
+                "Batavia Mutiny of 1628",
+                "Berlin 1989",
+                "Bioluminescent Deep Oceanic Moon, 2156 - Europa (Jupiter's Moon)",
+                "Deep Sea Mining 2050 Kawio Barat Philippines",
+                "Dolle Mina women's rights 1970s",
+                "Dutch Resistance WW2 : Teenage Assassins Freddie, Hannie, and Truus",
+                "France 1500 Tapestries La dame à la licorne",
+                "Garden UK Allotment Present",
+                "Gas station Midwest USA 1950s",
+                "Heian Period Japan",
+                "Indonesian War of Independence",
+                "Interdimensional Cat Café, Present Day Japan",
+                "Junkyard Detroit USA 1940s",
+                "Khmer Empire 802–1431 AD (Cambodia)",
+                "Kitchen Oxford UK 1970s",
+                "Majapahit Empire 1293–1527 AD (Indonesia)",
+                "Norman conquest of England 1066",
+                "Shipyard Chittagong Bangladesh 2020",
+                "Space Race US-USSR",
+                "Submerged Island Nation, 2156 – Maldives",
+                "Theatre London Vaudeville 1880-1890",
+                "Victorian Industrial Skyports, 1887 - United Kingdom"
+            ]
+        };
+
+        function getRandomItem(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+
+        function generateConcept() {
+            const results = [
+                { title: "Theme & Mood", value: getRandomItem(gameData.theme) },
+                { title: "(Sub)Genre", value: getRandomItem(gameData.genre) },
+                { title: "Setting", value: getRandomItem(gameData.setting) },
+                { title: "Visual & Viewpoint", value: getRandomItem(gameData.visual) },
+                { title: "Feature", value: getRandomItem(gameData.feature) }
+            ];
+
+            const resultsContainer = document.getElementById('results');
+            resultsContainer.innerHTML = '';
+
+            results.forEach((result, index) => {
+                setTimeout(() => {
+                    const card = document.createElement('div');
+                    card.className = 'result-card';
+                    card.innerHTML = `
+                        <h3>${result.title}</h3>
+                        <p>${result.value}</p>
+                    `;
+                    resultsContainer.appendChild(card);
+                    
+                    // Trigger animation
+                    setTimeout(() => {
+                        card.classList.add('show');
+                    }, 50);
+                }, index * 150);
+            });
+        }
+
+        // Generate initial concept on page load
+        window.addEventListener('load', () => {
+            setTimeout(generateConcept, 500);
+        });
+    </script>
+</body>
+</html>
