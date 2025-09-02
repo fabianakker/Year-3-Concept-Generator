@@ -75,13 +75,6 @@
             border-radius: 15px;
             box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
             transition: all 0.3s ease;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        .result-card.show {
-            opacity: 1;
-            transform: translateY(0);
         }
 
         .result-card:hover {
@@ -99,6 +92,12 @@
             font-size: 1.1em;
             font-weight: bold;
             color: white;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .result-card p.show {
+            opacity: 1;
         }
 
         .footer {
@@ -242,19 +241,18 @@
             resultsContainer.innerHTML = '';
 
             results.forEach((result, index) => {
+                const card = document.createElement('div');
+                card.className = 'result-card';
+                card.innerHTML = `
+                    <h3>${result.title}</h3>
+                    <p>${result.value}</p>
+                `;
+                resultsContainer.appendChild(card);
+                
+                // Fade in the text after a delay
                 setTimeout(() => {
-                    const card = document.createElement('div');
-                    card.className = 'result-card';
-                    card.innerHTML = `
-                        <h3>${result.title}</h3>
-                        <p>${result.value}</p>
-                    `;
-                    resultsContainer.appendChild(card);
-                    
-                    // Trigger animation
-                    setTimeout(() => {
-                        card.classList.add('show');
-                    }, 50);
+                    const textElement = card.querySelector('p');
+                    textElement.classList.add('show');
                 }, index * 150);
             });
         }
